@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Độ Nhạy Pro - Game Booster</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* ----- RESET & BASE ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+            background: #0a0a12;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+            background-image: radial-gradient(ellipse at 20% 50%, rgba(0, 255, 200, 0.06) 0%, transparent 60%),
+                              radial-gradient(ellipse at 80% 50%, rgba(255, 0, 200, 0.06) 0%, transparent 60%);
+        }
+
+        /* ----- APP CONTAINER ----- */
+        #app {
+            max-width: 460px;
+            width: 100%;
+            background: rgba(16, 20, 35, 0.88);
+            backdrop-filter: blur(18px);
+            border-radius: 36px;
+            padding: 18px 16px 28px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        #app::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, rgba(0, 255, 200, 0.03), rgba(255, 0, 200, 0.03), rgba(0, 255, 200, 0.03));
+            animation: rotateBg 20s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes rotateBg {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ----- KEY SCREEN ----- */
+        #key-screen {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 20px 0;
+        }
+        #key-screen .logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.2rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #00f5a0, #00d9f5, #ff00e4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 245, 160, 0.3);
+            margin-bottom: 6px;
+        }
+        #key-screen .sub {
+            color: #8892b0;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+        .key-input-group {
+            display: flex;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 4px;
+            border-radius: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .key-input-group input {
+            flex: 1;
+            padding: 14px 20px;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 1px;
+            outline: none;
+        }
+        .key-input-group input::placeholder {
+            color: #4a5070;
+        }
+        .key-input-group button {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 60px;
+            background: linear-gradient(135deg, #00f5a0, #00d9f5);
+            color: #0a0a12;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 20px rgba(0, 245, 160, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .key-input-group button:hover {
+            transform: scale(1.04);
+            box-shadow: 0 6px 30px rgba(0, 245, 160, 0.5);
+        }
+        #key-message {
+            margin-top: 14px;
+            font-size: 0.9rem;
+            min-height: 28px;
+            color: #ff6b6b;
+        }
+        #key-message.success {
+            color: #00f5a0;
+        }
+        .key-hint {
+            margin-top: 10px;
+            font-size: 0.75rem;
+            color: #4a5070;
+        }
+        .key-hint span {
+            color: #00d9f5;
+            font-weight: 600;
+        }
+        .timer-box {
+            margin-top: 18px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 12px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .timer-box .label {
+            font-size: 0.7rem;
+            color: #4a5070;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .timer-box .time {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #00f5a0, #00d9f5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ----- MAIN SCREEN ----- */
+        #main-screen {
+            position: relative;
+            z-index: 2;
+            display: none;
+            animation: fadeUp 0.5s ease;
+        }
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header */
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .main-header .brand {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00f5a0, #00d9f5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .main-header .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.8rem;
+            color: #8892b0;
+        }
+        .main-header .user-info i {
+            color: #00f5a0;
+        }
+        .main-header .user-info .key-status {
+            background: rgba(0, 245, 160, 0.12);
+            padding: 4px 12px;
+            border-radius: 30px;
+            color: #00f5a0;
+            font-weight: 600;
+            font-size: 0.7rem;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 60px;
+            padding: 4px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .tab-nav button {
+            flex: 1;
+            padding: 10px 0;
+            border: none;
+            background: transparent;
+            color: #4a5070;
+            border-radius: 40px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .tab-nav button i {
+            font-size: 1.1rem;
+        }
+        .tab-nav button.active {
+            background: linear-gradient(135deg, #00f5a0, #00d9f5);
+            color: #0a0a12;
+            box-shadow: 0 4px 15px rgba(0, 245, 160, 0.25);
+        }
+        .tab-content {
+            display: none;
+            animation: fadeUp 0.3s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ----- TAB FIX LAG ----- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .stat-item {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            padding: 12px 8px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .stat-item i {
+            font-size: 1.4rem;
+            color: #00d9f5;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .stat-item .label {
+            font-size: 0.6rem;
+            color: #4a5070;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .stat-item .value {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            margin-top: 2px;
+        }
+        .stat-item .value.highlight {
+            color: #00f5a0;
+        }
+
+        .boost-btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 60px;
+            background: linear-gradient(135deg, #ff00e4, #ff6b6b);
+            color: #fff;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 6px 30px rgba(255, 0, 228, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        .boost-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 40px rgba(255, 0, 228, 0.5);
+        }
+        .boost-progress {
+            margin-top: 14px;
+            display: none;
+        }
+        .boost-progress .bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .boost-progress .bar div {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #00f5a0, #00d9f5);
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+        .boost-progress .label {
+            font-size: 0.8rem;
+            color: #8892b0;
+            margin-top: 6px;
+            text-align: center;
+        }
+
+        /* ----- TAB SENSITIVITY ----- */
+        .device-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .device-input input {
+            flex: 1;
+            padding: 12px 18px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 30px;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        .device-input input::placeholder {
+            color: #4a5070;
+        }
+        .device-input button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #00f5a0, #00d9f5);
+            color: #0a0a12;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .device-input button:hover {
+            transform: scale(1.04);
+        }
+
+        .sens-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .sens-item .label {
+            font-weight: 600;
+            font-size: 0.95rem;
+            width: 70px;
+        }
+        .sens-item .range-wrap {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .sens-item input[type="range"] {
+            flex: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 4px;
+            background: #2a2f4a;
+            border-radius: 4px;
+            outline: none;
+        }
+        .sens-item input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00f5a0, #00d9f5);
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 245, 160, 0.3);
+        }
+        .sens-item .val {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.9rem;
+            min-width: 36px;
+            text-align: right;
+            color: #00d9f5;
+        }
+
+        .save-sens-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 60px;
+            background: linear-gradient(135deg, #ff00e4, #ff6b6b);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 12px;
+            box-shadow: 0 4px 20px rgba(255, 0, 228, 0.25);
+        }
+        .save-sens-btn:hover {
+            transform: scale(1.02);
+        }
+
+        .saved-devices {
+            margin-top: 16px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .saved-devices .title {
+            font-size: 0.75rem;
+            color: #4a5070;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .device-chip {
+            display: inline-block;
+            background: rgba(0, 245, 160, 0.1);
+            padding: 4px 16px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            color: #00f5a0;
+            margin: 4px 6px 4px 0;
+            border: 1px solid rgba(0, 245, 160, 0.15);
+        }
+
+        /* ----- TOAST ----- */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a1e30;
+            padding: 12px 24px;
+            border-radius: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            font-size: 0.9rem;
+            color: #fff;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: 0.4s;
+            pointer-events: none;
+            z-index: 999;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ----- RESPONSIVE ----- */
+        @media (max-width: 420px) {
+            #app { padding: 12px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+            .tab-nav button { font-size: 0.75rem; padding: 8px 0; }
+            .tab-nav button i { font-size: 0.9rem; }
+            .key-input-group input { font-size: 0.85rem; padding: 12px 16px; }
+            .key-input-group button { padding: 10px 18px; font-size: 0.85rem; }
+            .main-header .brand { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <!-- ===== MÀN HÌNH KEY ===== -->
+    <div id="key-screen">
+        <div class="logo">⚡ ĐỘ NHẠY PRO</div>
+        <div class="sub">GAME BOOSTER • SENSITIVITY MASTER</div>
+
+        <div class="key-input-group">
+            <input type="text" id="keyInput" placeholder="Nhập key (VD: THAILEPRO-ABC12)" />
+            <button id="activateBtn">Kích hoạt</button>
+        </div>
+        <div id="keyMessage"></div>
+
+        <div class="timer-box" id="timerBox" style="display:none;">
+            <div class="label">⏳ Thời gian còn lại</div>
+            <div class="time" id="countdownDisplay">--:--:--</div>
+        </div>
+
+        <div class="key-hint">
+            🔑 Liên hệ <span>@thailesupport</span> để nhận key mới
+        </div>
+    </div>
+
+    <!-- ===== MÀN HÌNH CHÍNH ===== -->
+    <div id="main-screen">
+        <!-- Header -->
+        <div class="main-header">
+            <div class="brand">⚡ ĐỘ NHẠY</div>
+            <div class="user-info">
+                <i class="fas fa-key"></i>
+                <span class="key-status" id="keyStatus">Đã kích hoạt</span>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <nav class="tab-nav">
+            <button class="active" data-tab="fixlag"><i class="fas fa-bolt"></i> Fix Lag</button>
+            <button data-tab="sensitivity"><i class="fas fa-crosshairs"></i> Độ nhạy</button>
+        </nav>
+
+        <!-- Tab Fix Lag -->
+        <div id="tab-fixlag" class="tab-content active">
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-item">
+                    <i class="fas fa-microchip"></i>
+                    <div class="label">CPU</div>
+                    <div class="value" id="cpuVal">45%</div>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-memory"></i>
+                    <div class="label">RAM</div>
+                    <div class="value" id="ramVal">62%</div>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-battery-three-quarters"></i>
+                    <div class="label">Pin</div>
+                    <div class="value" id="batteryVal">87%</div>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-thermometer-half"></i>
+                    <div class="label">Nhiệt</div>
+                    <div class="value" id="tempVal">38°C</div>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-wifi"></i>
+                    <div class="label">Ping</div>
+                    <div class="value highlight" id="pingVal">24ms</div>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-gamepad"></i>
+                    <div class="label">FPS</div>
+                    <div class="value highlight" id="fpsVal">60</div>
+                </div>
+            </div>
+
+            <button class="boost-btn" id="boostBtn">
+                <i class="fas fa-rocket"></i> TỐI ƯU NGAY
+            </button>
+            <div class="boost-progress" id="boostProgress">
+                <div class="bar"><div id="boostBar"></div></div>
+                <div class="label" id="boostLabel">Đang tối ưu...</div>
+            </div>
+        </div>
+
+        <!-- Tab Độ nhạy -->
+        <div id="tab-sensitivity" class="tab-content">
+            <div class="device-input">
+                <input type="text" id="deviceInput" placeholder="Tên thiết bị (VD: iPhone 14)" />
+                <button id="loadDeviceBtn"><i class="fas fa-search"></i></button>
+            </div>
+
+            <div id="sensList">
+                <div class="sens-item">
+                    <span class="label">X</span>
+                    <div class="range-wrap">
+                        <input type="range" id="sensX" min="0" max="100" value="50" />
+                        <span class="val" id="sensXVal">50</span>
+                    </div>
+                </div>
+                <div class="sens-item">
+                    <span class="label">Y</span>
+                    <div class="range-wrap">
+                        <input type="range" id="sensY" min="0" max="100" value="50" />
+                        <span class="val" id="sensYVal">50</span>
+                    </div>
+                </div>
+                <div class="sens-item">
+                    <span class="label">ADS</span>
+                    <div class="range-wrap">
+                        <input type="range" id="sensADS" min="0" max="100" value="45" />
+                        <span class="val" id="        .key-input-group input {
+            flex: 1;
+            padding: 14px 20px;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 1px;
+            outline: none;
+        }
+        .key-input-group input::placeholder {
+            color: #4a5070;
+        }
+        .key-input-group button {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 60px;
+            background: linear-gradient(135deg, #00f5a0, #00d9f5);
+            color: #0a0a12;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 20px rgba(0, 245, 160, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .key-input-group button:hover {
+            transform: scale(1.04);
+            box-shadow: 0 6px 30px rgba(0, 245, 160, 0.5);
+        }
+        #key-message {
+            margin-top: 14px;
+            font-size: 0.9rem;
+            min-height: 28px;
+            color: #ff6b6b;
+        }
+        #key-message.success {
+            color: #00f5a0;
+        }
+        .key-hint {
+            margin-top: 10px;
+            font-size: 0.75rem;
+            color: #4a5070;
+        }
+        .key-hint span {
+            color: #00d9f5;
+            font-weight: 600;
+        }
+        .timer-box {
+            margin-top: 18px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 12px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .timer-box .label {
+            font-size: 0.7rem;
+            color: #4a5070;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .timer-box .time {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #00f5a0, #00d9f5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ----- MAIN SCREEN ----- */
+        #main-screen {
+            position: relative;
+            z-index: 2;
+            display: none;
+            animation: fadeUp 0.5s ease;
+        }
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header */
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .main-header .brand {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00f5a0, #00d9f5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .main-header .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.8rem;
+            color: #8892b0;
+        }
+        .main-header .user-info i {
+            color: #00f5a0;
+        }
+        .main-header .user-info .key-status {
+            background: rgba(0, 245, 160, 0.12);
+            padding: 4px 12px;
+            border-radius: 30px;
+            color: #00f5a0;
+            font-weight: 600;
+            font-size: 0.7rem;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 60px;
+            padding: 4px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .tab-nav button {
+            flex: 1;
+            padding: 10px 0;
+            border: none;
+            background: transparent;
+            color: #4a5070;
+            border-radius: 40px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .tab-nav button i {
+            font-size: 1.1rem;
+        }
+        .tab-nav button.active {
+            background: linear-gradient(135deg, #00f5a0, #00d9f5);
+            color: #0a0a12;
+            box-shadow: 0 4px 15px rgba(0, 245, 160, 0.25);
+        }
+        .tab-content {
+            display: none;
+            animation: fadeUp 0.3s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ----- TAB FIX LAG ----- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .stat-item {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            padding: 12px 8px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .stat-item i {
+            font-size: 1.4rem;
+            color: #00d9f5;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .stat-item .label {
+            font-size: 0.6rem;
+            color: #4a5070;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .stat-item .value {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            margin-top: 2px;
+        }
+        .stat-item .value.highlight {
+            color: #00f5a0;
+        }
+
+        .boost-btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 60px;
+            background: linear-gradient(135deg, #ff00e4, #ff6b6b);
+            color: #fff;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 6px 30px rgba(255, 0, 228, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        .boost-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 40px rgba(255, 0, 228, 0.5);
+        }
+        .boost-progress {
+            margin-top: 14px;
+            display: none;
+        }
+        .boost-progress .bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .boost-progress .bar div {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #00f5a0, #00d9f5);
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+        .boost-progress .label {
+            font-size: 0.8rem;
+            color: #8892b0;
+            margin-top: 6px;
+            text-align: center;
+        }
+
+        /* ----- TAB SENSITIVITY ----- */
+        .device-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .device-input input {
+            flex: 1;
+            padding: 12px 18px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 30px;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        .device-input input::placeholder {
+            color: #4a5070;
+        }
+        .device-input button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #00f5a0, #00d9f5);
+            color: #0a0a12;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .device-input button:hover {
+            transform: scale(1.04);
+        }
+
+        .sens-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .sens-item .label {
+            font-weight: 600;
+            font-size: 0.95rem;
+            width: 70px;
+        }
+        .sens-item .range-wrap {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .sens-item input[type="range"] {
+            flex: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 4px;
+            background: #2a2f4a;
+            border-radius: 4px;
+            outline: none;
+        }
+        .sens-item input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00f5a0, #00d9f5);
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 245, 160, 0.3);
+        }
+        .sens-item .val {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.9rem;
+            min-width: 36px;
+            text-align: right;
+            color: #00d9f5;
+        }
+
+        .save-sens-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 60px;
+            background: linear-gradient(135deg, #ff00e4, #ff6b6b);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 12px;
+            box-shadow: 0 4px 20px rgba(255, 0, 228, 0.25);
+        }
+        .save-sens-btn:hover {
+            transform: scale(1.02);
+        }
+
+        .saved-devices {
+            margin-top: 16px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .saved-devices .title {
+            font-size: 0.75rem;
+            color: #4a5070;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .device-chip {
+            display: inline-block;
+            background: rgba(0, 245, 160, 0.1);
+            padding: 4px 16px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            color: #00f5a0;
+            margin: 4px 6px 4px 0;
+            border: 1px solid rgba(0, 245, 160, 0.15);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .device-chip:hover {
+            background: rgba(0, 245, 160, 0.2);
+        }
+
+        /* ----- TOAST ----- */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a1e30;
+            padding: 12px 24px;
+            border-radius: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            font-size: 0.9rem;
+            color: #fff;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: 0.4s;
+            pointer-events: none;
+            z-index: 999;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ----- RESPONSIVE ----- */
+        @media (max-width: 420px) {
+            #app { padding: 12px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+            .tab-nav button { font-size: 0.75rem; padding: 8px 0; }
+            .tab-nav button i { font-size: 0.9rem; }
+            .key-input-group input { font-size: 0.85rem; padding: 12px 16px; }
+            .key-input-group button { padding: 10px 18px; font-size: 0.85rem; }
+            .main-header .brand { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <!-- ===== MÀN HÌNH KEY ===== -->
+    <div id="key-screen">
+        <div class="logo">⚡ ĐỘ NHẠY PRO</div>
+        <div class="sub">GAME BOOSTER • SENSITIVITY MASTER</div>
+
+        <div class="key-input-group">
+            <input type="text" id="keyInput" placeholder="Nhập key (VD: THAILEPRO-ABC12)" />
+            <button id="activateBtn">Kích hoạt</button>
+        </div>
+        <div id="keyMessage"></div>
+
+        <div class="timer-box" id="timerBox" style="display:none;">
+            <div class="label">⏳ Thời gian còn lại</div>
+            <div class="time" id="countdownDisplay">--:--:--</div>
+        </div>
+
+        <div class="key-hint">
+            🔑 Liên hệ <span>@thailesupport</span> để nhận key mới
+        </div>
+    </div>
+
+    <!-- ===== MÀN HÌNH CHÍNH ===== -->
+    <div id="main-screen">
+        <!-- Header -->
+        <div class="main-header">
+            <div class="brand">⚡ ĐỘ NHẠY</div>
+            <div class="user-info">
+                <i class="fas fa-key"></i>
+                <span class="key-status" id="keyStatus">Đã kích hoạt</span>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <nav class="tab-nav">
+            <button class="active" data-tab="fixlag"><i class="fas fa-bolt"></i> Fix Lag</button>
+            <button data-tab="sensitivity"><i class="fas fa-crosshairs"></i> Độ nhạy</button>
+        </nav>
+
+        <!-- Tab Fix Lag -->
+        <div id="tab-fixlag" class="tab-content active">
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-item">
+                    <i class="fas fa-microchip"></i>
+                    <div class="label">CPU</div>
+                    <div class="value" id="cpuVal">45%</div>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-memory"></i>
+                    <div class="label">RAM</div>
+                    <div class="value" id="ramVal">62%</div>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-battery-three-quarters"></i>
+                    <div class="label">Pin</div>
+                    <div class="value" id="batteryVal">87%</div>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-thermometer-half"></i>
+                    <div class="label">Nhiệt</div>
+                    <div class="value" id="tempVal">38°C</div>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-wifi"></i>
+                    <div class="label">Ping</div>
+                    <div class="value highlight" id="pingVal">24ms</div>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-gamepad"></i>
+                    <div class="label">FPS</div>
+                    <div class="value highlight" id="fpsVal">60</div>
+                </div>
+            </div>
+
+            <button class="boost-btn" id="boostBtn">
+                <i class="fas fa-rocket"></i> TỐI ƯU NGAY
+            </button>
+            <div class="boost-progress" id="boostProgress">
+                <div class="bar"><div id="boostBar"></div></div>
+                <div class="label" id="boostLabel">Đang tối ưu...</div>
+            </div>
+        </div>
+
+        <!-- Tab Độ nhạy -->
+        <div id="tab-sensitivity" class="tab-content">
+            <div class="device-input">
+                <input type="text" id="deviceInput" placeholder="Tên thiết bị (VD: iPhone 14)" />
+                <button id="loadDeviceBtn"><i class="fas fa-search"></i></button>
+            </div>
+
+            <div id="sensList">
+                <div class="sens-item">
+                    <span class="label">X</span>
+                    <div class="range-wrap">
+                        <input type="range" id="sensX" min="0" max="100" value="50" />
+                        <span class="val" id="sensXVal">50</span>
+                    </div>
+                </div>
+                <div class="sens-item">
+                    <span class="label">Y</span>
+                    <div class="range-wrap">
+                        <input type="range" id="sensY" min="0" max="100" value="50" />
+                        <span class="val" id="sensYVal">50</span>
+                    </div>
+                </div>
+                <div class="sens-item">
+                    <span class="label">ADS</span>
+                    <div class="range-wrap">
+                        <input type="range" id="sensADS" min="0" max="100" value="45" />
+                        <span class="val" id="sensADSVal">45</span>
+                    </div>
+                </div>
+                <div class="sens-item">
+                    <span class="label">Scope</span>
+                    <div class="range-wrap">
+                        <input type="range" id="sensScope" min="0" max="100" value="30" />
+                        <span class="val" id="sensScopeVal">30</span>
+                    </div>
+                </div>
+            </div>
+
+            <button class="save-sens-btn" id="saveSensBtn"><i class="fas fa-save"></i> LƯU CÀI ĐẶT</button>
+
+            <div class="saved-devices" id="savedDevices">
+                <div class="title">📁 Thiết bị đã lưu</div>
+                <div id="deviceList"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<script>
+    // ============================================================
+    //  DANH SÁCH KEY HỢP LỆ (10 KEY, THỜI HẠN 10 GIỜ)
+    // ============================================================
+    const VALID_KEYS = [
+        'THAILEPRO-ABC12',
+        'THAILEPRO-DEF34',
+        'THAILEPRO-GHI56',
+        'THAILEPRO-JKL78',
+        'THAILEPRO-MNO90',
+        'THAILEPRO-PQR12',
+        'THAILEPRO-STU34',
+        'THAILEPRO-VWX56',
+        'THAILEPRO-YZA78',
+        'THAILEPRO-BCD90'
+    ];
+
+    const KEY_DURATION_HOURS = 10; // 10 giờ
+
+    // ============================================================
+    //  STATE
+    // ============================================================
+    let currentKey = localStorage.getItem('fixlag_key') || null;
+    let keyActivatedAt = localStorage.getItem('fixlag_key_activated') ? parseInt(localStorage.getItem('fixlag_key_activated')) : null;
+    let timerInterval = null;
+    let isActivated = false;
+
+    // Sensitivity data: lưu theo device
+    let sensData = {};
+
+    // DOM refs
+    const keyScreen = document.getElementById('key-screen');
+    const mainScreen = document.getElementById('main-screen');
+    const keyInput = document.getElementById('keyInput');
+    const activateBtn = document.getElementById('activateBtn');
+    const keyMessage = document.getElementById('keyMessage');
+    const timerBox = document.getElementById('timerBox');
+    const countdownDisplay = document.getElementById('countdownDisplay');
+    const keyStatus = document.getElementById('keyStatus');
+
+    // Stats
+    const cpuVal = document.getElementById('cpuVal');
+    const ramVal = document.getElementById('ramVal');
+    const batteryVal = document.getElementById('batteryVal');
+    const tempVal = document.getElementById('tempVal');
+    const pingVal = document.getElementById('pingVal');
+    const fpsVal = document.getElementById('fpsVal');
+
+    // Boost
+    const boostBtn = document.getElementById('boostBtn');
+    const boostProgress = document.getElementById('boostProgress');
+    const boostBar = document.getElementById('boostBar');
+    const boostLabel = document.getElementById('boostLabel');
+
+    // Sensitivity
+    const deviceInput = document.getElementById('deviceInput');
+    const loadDeviceBtn = document.gets// ============================================================
+//  DANH SÁCH KEY HỢP LỆ (10 KEY, THỜI HẠN 10 GIỜ)
+// ============================================================
+const VALID_KEYS = [
+    'THAILEPRO-ABC12',
+    'THAILEPRO-DEF34',
+    'THAILEPRO-GHI56',
+    'THAILEPRO-JKL78',
+    'THAILEPRO-MNO90',
+    'THAILEPRO-PQR12',
+    'THAILEPRO-STU34',
+    'THAILEPRO-VWX56',
+    'THAILEPRO-YZA78',
+    'THAILEPRO-BCD90'
+];
+
+const KEY_DURATION_HOURS = 10; // 10 giờ
+
+// ============================================================
+//  STATE
+// ============================================================
+let currentKey = localStorage.getItem('fixlag_key') || null;
+let keyActivatedAt = localStorage.getItem('fixlag_key_activated') ? parseInt(localStorage.getItem('fixlag_key_activated')) : null;
+let timerInterval = null;
+let isActivated = false;
+
+// Sensitivity data: lưu theo device
+let sensData = {};
+
+// DOM refs
+const keyScreen = document.getElementById('key-screen');
+const mainScreen = document.getElementById('main-screen');
+const keyInput = document.getElementById('keyInput');
+const activateBtn = document.getElementById('activateBtn');
+const keyMessage = document.getElementById('keyMessage');
+const timerBox = document.getElementById('timerBox');
+const countdownDisplay = document.getElementById('countdownDisplay');
+const keyStatus = document.getElementById('keyStatus');
+
+// Stats
+const cpuVal = document.getElementById('cpuVal');
+const ramVal = document.getElementById('ramVal');
+const batteryVal = document.getElementById('batteryVal');
+const tempVal = document.getElementById('tempVal');
+const pingVal = document.getElementById('pingVal');
+const fpsVal = document.getElementById('fpsVal');
+
+// Boost
+const boostBtn = document.getElementById('boostBtn');
+const boostProgress = document.getElementById('boostProgress');
+const boostBar = document.getElementById('boostBar');
+const boostLabel = document.getElementById('boostLabel');
+
+// Sensitivity
+const deviceInput = document.getElementById('deviceInput');
+const loadDeviceBtn = document.getElementById('loadDeviceBtn');
+const sensX = document.getElementById('sensX');
+const sensY = document.getElementById('sensY');
+const sensADS = document.getElementById('sensADS');
+const sensScope = document.getElementById('sensScope');
+const sensXVal = document.getElementById('sensXVal');
+const sensYVal = document.getElementById('sensYVal');
+const sensADSVal = document.getElementById('sensADSVal');
+const sensScopeVal = document.getElementById('sensScopeVal');
+const saveSensBtn = document.getElementById('saveSensBtn');
+const deviceList = document.getElementById('deviceList');
+
+const toast = document.getElementById('toast');
+
+// ============================================================
+//  TOAST
+// ============================================================
+function showToast(msg, dur = 2500) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => toast.classList.remove('show'), dur);
+}
+
+// ============================================================
+//  KEY MANAGEMENT
+// ============================================================
+function isKeyValid(key) {
+    return VALID_KEYS.includes(key);
+}
+
+function checkKeyActivation() {
+    if (!currentKey || !keyActivatedAt) return false;
+    const elapsed = (Date.now() - keyActivatedAt) / (1000 * 60 * 60); // giờ
+    if (elapsed >= KEY_DURATION_HOURS) {
+        // Hết hạn
+        localStorage.removeItem('fixlag_key');
+        localStorage.removeItem('fixlag_key_activated');
+        currentKey = null;
+        keyActivatedAt = null;
+        return false;
+    }
+    return true;
+}
+
+function activateKey(key) {
+    if (!isKeyValid(key)) {
+        keyMessage.textContent = '❌ Key không hợp lệ!';
+        keyMessage.className = '';
+        showToast('Key sai!', 2000);
+        return false;
+    }
+    // Lưu key
+    currentKey = key;
+    keyActivatedAt = Date.now();
+    localStorage.setItem('fixlag_key', key);
+    localStorage.setItem('fixlag_key_activated', String(keyActivatedAt));
+    keyMessage.textContent = '✅ Kích hoạt thành công!';
+    keyMessage.className = 'success';
+    showToast('🎮 Key hợp lệ! Chào mừng bạn!', 3000);
+    enterMainApp();
+    return true;
+}
+
+function enterMainApp() {
+    isActivated = true;
+    keyScreen.style.display = 'none';
+    mainScreen.style.display = 'block';
+    keyStatus.textContent = 'Đã kích hoạt';
+    startCountdown();
+    loadSensitivityData();
+    renderDeviceList();
+    startStatsSimulation();
+}
+
+function startCountdown() {
+    if (!keyActivatedAt) return;
+    timerBox.style.display = 'block';
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        const elapsed = (Date.now() - keyActivatedAt) / 1000; // giây
+        const remaining = Math.max(0, KEY_DURATION_HOURS * 3600 - elapsed);
+        if (remaining <= 0) {
+            clearInterval(timerInterval);
+            countdownDisplay.textContent = '00:00:00';
+            showToast('⏰ Key đã hết hạn! Vui lòng nhập key mới.', 4000);
+            // Thoát ra màn hình key
+            localStorage.removeItem('fixlag_key');
+            localStorage.removeItem('fixlag_key_activated');
+            currentKey = null;
+            keyActivatedAt = null;
+            isActivated = false;
+            keyScreen.style.display = 'block';
+            mainScreen.style.display = 'none';
+            timerBox.style.display = 'none';
+            keyMessage.textContent = '⏰ Key đã hết hạn. Nhập key mới.';
+            keyMessage.className = '';
+            return;
+        }
+        const hours = Math.floor(remaining / 3600);
+        const mins = Math.floor((remaining % 3600) / 60);
+        const secs = Math.floor(remaining % 60);
+        countdownDisplay.textContent =
+            String(hours).padStart(2, '0') + ':' +
+            String(mins).padStart(2, '0') + ':' +
+            String(secs).padStart(2, '0');
+    }, 1000);
+}
+
+// ============================================================
+//  STATS SIMULATION
+// ============================================================
+function updateStats() {
+    const cpu = Math.floor(Math.random() * 40) + 20;
+    const ram = Math.floor(Math.random() * 50) + 30;
+    const battery = Math.floor(Math.random() * 30) + 60;
+    const temp = Math.floor(Math.random() * 12) + 32;
+    const ping = Math.floor(Math.random() * 20) + 10;
+    const fps = Math.floor(Math.random() * 30) + 50;
+
+    cpuVal.textContent = cpu + '%';
+    ramVal.textContent = ram + '%';
+    batteryVal.textContent = battery + '%';
+    tempVal.textContent = temp + '°C';
+    pingVal.textContent = ping + 'ms';
+    fpsVal.textContent = fps;
+}
+
+let statsInterval = null;
+function startStatsSimulation() {
+    if (statsInterval) clearInterval(statsInterval);
+    updateStats();
+    statsInterval = setInterval(updateStats, 2000);
+}
+
+// ============================================================
+//  BOOST (Fix Lag)
+// ============================================================
+boostBtn.addEventListener('click', () => {
+    if (!isActivated) {
+        showToast('🔑 Vui lòng kích hoạt key trước!');
+        return;
+    }
+    boostBtn.disabled = true;
+    boostBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ĐANG TỐI ƯU...';
+    boostProgress.style.display = 'block';
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += Math.random() * 15 + 5;
+        if (progress >= 100) {
+            progress = 100;
+            clearInterval(interval);
+            boostBar.style.width = '100%';
+            boostLabel.textContent = '✅ Tối ưu hoàn tất! Hiệu suất tăng 25%';
+            showToast('⚡ Tối ưu thành công!', 3000);
+            // Cập nhật stats ngẫu nhiên tốt hơn
+            cpuVal.textContent = Math.floor(Math.random() * 15 + 10) + '%';
+            ramVal.textContent = Math.floor(Math.random() * 20 + 20) + '%';
+            pingVal.textContent = Math.floor(Math.random() * 10 + 5) + 'ms';
+            fpsVal.textContent = Math.floor(Math.random() * 20 + 70);
+            setTimeout(() => {
+                boostProgress.style.display = 'none';
+                boostBar.style.width = '0%';
+                boostBtn.disabled = false;
+                boostBtn.innerHTML = '<i class="fas fa-rocket"></i> TỐI ƯU NGAY';
+            }, 1200);
+        } else {
+            boostBar.style.width = progress + '%';
+            boostLabel.textContent = `Đang tối ưu... ${Math.round(progress)}%`;
+        }
+    }, 150);
+});
+
+// ============================================================
+//  SENSITIVITY
+// ============================================================
+// Cập nhật giá trị hiển thị khi kéo thanh trượt
+[sensX, sensY, sensADS, sensScope].forEach((slider, idx) => {
+    slider.addEventListener('input', () => {
+        const val = slider.value;
+        const targets = [sensXVal, sensYVal, sensADSVal, sensScopeVal];
+        targets[idx].textContent = val;
+    });
+});
+
+// Load cài đặt cho thiết bị
+function loadSensitivityData() {
+    const saved = localStorage.getItem('fixlag_sens_data');
+    if (saved) {
+        try {
+            sensData = JSON.parse(saved);
+        } catch (e) { sensData = {}; }
+    } else {
+        sensData = {};
+    }
+}
+
+function saveSensitivityData() {
+    localStorage.setItem('fixlag_sens_data', JSON.stringify(sensData));
+}
+
+function loadDevice(deviceName) {
+    if (!deviceName) return;
+    const data = sensData[deviceName];
+    if (data) {
+        sensX.value = data.x || 50;
+        sensY.value = data.y || 50;
+        sensADS.value = data.ads || 45;
+        sensScope.value = data.scope || 30;
+        sensXVal.textContent = sensX.value;
+        sensYVal.textContent = sensY.value;
+        sensADSVal.textContent = sensADS.value;
+        sensScopeVal.textContent = sensScope.value;
+        showToast(`📂 Đã tải cài đặt cho ${deviceName}`, 2000);
+    } else {
+        // Đặt mặc định
+        sensX.value = 50;
+        sensY.value = 50;
+        sensADS.value = 45;
+        sensScope.value = 30;
+        sensXVal.textContent = '50';
+        sensYVal.textContent = '50';
+        sensADSVal.textContent = '45';
+        sensScopeVal.textContent = '30';
+        showToast(`🆕 Thiết bị mới, cài đặt mặc định`, 2000);
+    }
+    deviceInput.value = deviceName;
+}
+
+function renderDeviceList() {
+    const devices = Object.keys(sensData);
+    if (devices.length === 0) {
+        deviceList.innerHTML = '<span style="color:#4a5070;font-size:0.8rem;">Chưa có thiết bị nào</span>';
+        return;
+    }
+    deviceList.innerHTML = devices.map(d =>
+        `<span class="device-chip" data-device="${d}">${d}</span>`
+    ).join('');
+    // Gắn sự kiện click để tải
+    document.querySelectorAll('.device-chip').forEach(el => {
+        el.addEventListener('click', () => {
+            const device = el.dataset.device;
+            loadDevice(device);
+        });
+    });
+}
+
+// Lưu cài đặt cho thiết bị hiện tại
+saveSensBtn.addEventListener('click', () => {
+    if (!isActivated) {
+        showToast('🔑 Vui lòng kích hoạt key!');
+        return;
+    }
+    const device = deviceInput.value.trim();
+    if (!device) {
+        showToast('⚠️ Vui lòng nhập tên thiết bị!', 2000);
+        return;
+    }
+    sensData[device] = {
+        x: parseInt(sensX.value),
+        y: parseInt(sensY.value),
+        ads: parseInt(sensADS.value),
+        scope: parseInt(sensScope.value)
+    };
+    saveSensitivityData();
+    renderDeviceList();
+    showToast(`✅ Đã lưu cài đặt cho ${device}`, 2500);
+});
+
+// Tải thiết bị khi nhấn nút tìm kiếm
+loadDeviceBtn.addEventListener('click', () => {
+    const device = deviceInput.value.trim();
+    if (device) {
+        loadDevice(device);
+    } else {
+        showToast('⚠️ Nhập tên thiết bị trước', 1500);
+    }
+});
+
+// Cũng cho phép Enter
+deviceInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') loadDeviceBtn.click();
+});
+
+// ============================================================
+//  TAB SWITCHING
+// ============================================================
+document.querySelectorAll('.tab-nav button').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-nav button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+});
+
+// ============================================================
+//  KEY ACTIVATION EVENT
+// ============================================================
+activateBtn.addEventListener('click', () => {
+    const key = keyInput.value.trim().toUpperCase();
+    if (key) {
+        activateKey(key);
+    } else {
+        keyMessage.textContent = '⚠️ Vui lòng nhập key.';
+        keyMessage.className = '';
+    }
+});
+keyInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') activateBtn.click();
+});
+
+// ============================================================
+//  INIT – Kiểm tra key khi load
+// ============================================================
+(function init() {
+    const hasValid = checkKeyActivation();
+    if (hasValid && currentKey) {
+        // Tự động kích hoạt
+        keyMessage.textContent = '✅ Key hợp lệ! Đang vào ứng dụng...';
+        keyMessage.className = 'success';
+        setTimeout(() => {
+            enterMainApp();
+        }, 400);
+    } else {
+        // Chưa có key hoặc hết hạn
+        keyScreen.style.display = 'block';
+        mainScreen.style.display = 'none';
+        if (currentKey) {
+            keyMessage.textContent = '⏰ Key đã hết hạn. Vui lòng nhập key mới.';
+            keyMessage.className = '';
+            localStorage.removeItem('fixlag_key');
+            localStorage.removeItem('fixlag_key_activated');
+            currentKey = null;
+            keyActivatedAt = null;
+        }
+    }
+})();
+
+// ============================================================
+//  CLEANUP
+// ============================================================
+window.addEventListener('beforeunload', () => {
+    if (timerInterval) clearInterval(timerInterval);
+    if (statsInterval) clearInterval(statsInterval);
+});
+
+console.log('⚡ Độ Nhạy Pro - Game Booster');
+console.log('🔑 10 key hợp lệ:', VALID_KEYS.join(', '));
+    </script>
+</body>
+</html>
