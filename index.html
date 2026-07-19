@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>⚡ Fix Lag Pro - Game Booster</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Header chính -->
+    <header>
+      <div class="logo">
+        <i class="fas fa-bolt"></i>
+        <span>FIX LAG PRO</span>
+      </div>
+      <div class="version">v3.0</div>
+    </header>
+
+    <!-- Phần key (mở khoá) -->
+    <div id="key-section" class="card">
+      <h2><i class="fas fa-key"></i> Nhập Key Kích Hoạt</h2>
+      <p>Nhập key để mở khoá toàn bộ tính năng cao cấp</p>
+      <div class="key-input-group">
+        <input type="text" id="key-input" placeholder="Nhập key..." />
+        <button id="activate-btn" class="btn-primary"><i class="fas fa-check"></i> Kích hoạt</button>
+      </div>
+      <div id="key-message"></div>
+      <div class="key-hint">
+        <span>Key mặc định: <strong>THAILE-DVJSH</strong></span>
+      </div>
+    </div>
+
+    <!-- Nội dung chính (ẩn khi chưa kích hoạt) -->
+    <div id="main-content" style="display:none;">
+
+      <!-- Thanh điều hướng tab (dạng icon) -->
+      <nav class="tab-nav">
+        <button class="tab-btn active" data-tab="home"><i class="fas fa-home"></i><span>Trang chủ</span></button>
+        <button class="tab-btn" data-tab="optimize"><i class="fas fa-rocket"></i><span>Tối ưu</span></button>
+        <button class="tab-btn" data-tab="history"><i class="fas fa-history"></i><span>Lịch sử</span></button>
+        <button class="tab-btn" data-tab="settings"><i class="fas fa-cog"></i><span>Cài đặt</span></button>
+        <button class="tab-btn" data-tab="about"><i class="fas fa-info-circle"></i><span>Về</span></button>
+      </nav>
+
+      <!-- Tab: Trang chủ -->
+      <div id="tab-home" class="tab-content active">
+        <div class="status-grid">
+          <div class="status-item">
+            <i class="fas fa-microchip"></i>
+            <div><span>CPU</span><span id="cpu-usage">0%</span></div>
+          </div>
+          <div class="status-item">
+            <i class="fas fa-memory"></i>
+            <div><span>RAM</span><span id="ram-usage">0%</span></div>
+          </div>
+          <div class="status-item">
+            <i class="fas fa-battery-three-quarters"></i>
+            <div><span>Pin</span><span id="battery">90%</span></div>
+          </div>
+          <div class="status-item">
+            <i class="fas fa-thermometer-half"></i>
+            <div><span>Nhiệt</span><span id="temp">36°C</span></div>
+          </div>
+          <div class="status-item">
+            <i class="fas fa-wifi"></i>
+            <div><span>Ping</span><span id="ping">24ms</span></div>
+          </div>
+          <div class="status-item">
+            <i class="fas fa-gamepad"></i>
+            <div><span>FPS</span><span id="fps">60</span></div>
+          </div>
+        </div>
+
+        <!-- Báo cáo nhanh -->
+        <div class="quick-report card">
+          <h3><i class="fas fa-chart-line"></i> Hiệu suất tổng thể</h3>
+          <div class="progress-bar">
+            <div id="performance-bar" style="width:75%"></div>
+          </div>
+          <span id="performance-label">75% - Tốt</span>
+        </div>
+
+        <!-- Nút vào game và cấp quyền -->
+        <div class="action-buttons">
+          <button id="launch-game" class="btn-game"><i class="fas fa-play"></i> VÀO GAME</button>
+          <button id="grant-permission" class="btn-permission"><i class="fas fa-shield-alt"></i> CẤP QUYỀN</button>
+        </div>
+      </div>
+
+      <!-- Tab: Tối ưu -->
+      <div id="tab-optimize" class="tab-content">
+        <div class="optimize-grid">
+          <div class="opt-card" data-opt="ram">
+            <div class="icon"><i class="fas fa-broom"></i></div>
+            <h4>Dọn RAM</h4>
+            <p>Giải phóng bộ nhớ</p>
+            <button class="btn-optimize">Bắt đầu</button>
+            <div class="opt-status">Sẵn sàng</div>
+          </div>
+          <div class="opt-card" data-opt="fps">
+            <div class="icon"><i class="fas fa-rocket"></i></div>
+            <h4>Tăng FPS</h4>
+            <p>Tối ưu đồ họa</p>
+            <button class="btn-optimize">Bắt đầu</button>
+            <div class="opt-status">Sẵn sàng</div>
+          </div>
+          <div class="opt-card" data-opt="network">
+            <div class="icon"><i class="fas fa-satellite-dish"></i></div>
+            <h4>Mạng ổn định</h4>
+            <p>Giảm ping</p>
+            <button class="btn-optimize">Bắt đầu</button>
+            <div class="opt-status">Sẵn sàng</div>
+          </div>
+          <div class="opt-card" data-opt="battery">
+            <div class="icon"><i class="fas fa-battery-full"></i></div>
+            <h4>Tiết kiệm pin</h4>
+            <p>Tối ưu năng lượng</p>
+            <button class="btn-optimize">Bắt đầu</button>
+            <div class="opt-status">Sẵn sàng</div>
+          </div>
+          <div class="opt-card" data-opt="cpu">
+            <div class="icon"><i class="fas fa-tachometer-alt"></i></div>
+            <h4>Tăng tốc CPU</h4>
+            <p>Ép xung ảo</p>
+            <button class="btn-optimize">Bắt đầu</button>
+            <div class="opt-status">Sẵn sàng</div>
+          </div>
+          <div class="opt-card" data-opt="cache">
+            <div class="icon"><i class="fas fa-database"></i></div>
+            <h4>Xóa cache</h4>
+            <p>Dọn dẹp rác</p>
+            <button class="btn-optimize">Bắt đầu</button>
+            <div class="opt-status">Sẵn sàng</div>
+          </div>
+          <div class="opt-card" data-opt="game">
+            <div class="icon"><i class="fas fa-gamepad"></i></div>
+            <h4>Game Booster</h4>
+            <p>Ưu tiên game</p>
+            <button class="btn-optimize">Bắt đầu</button>
+            <div class="opt-status">Sẵn sàng</div>
+          </div>
+          <div class="opt-card" data-opt="all">
+            <div class="icon"><i class="fas fa-magic"></i></div>
+            <h4>Tối ưu tất cả</h4>
+            <p>Một chạm</p>
+            <button class="btn-optimize btn-all">Tối ưu toàn bộ</button>
+            <div class="opt-status">Sẵn sàng</div>
+          </div>
+        </div>
+
+        <!-- Thanh tiến trình tối ưu (hiện khi đang chạy) -->
+        <div id="optimize-progress" style="display:none;">
+          <div class="progress-bar"><div id="opt-progress-bar" style="width:0%"></div></div>
+          <p id="opt-progress-text">Đang tối ưu...</p>
+        </div>
+      </div>
+
+      <!-- Tab: Lịch sử -->
+      <div id="tab-history" class="tab-content">
+        <h3><i class="fas fa-clock"></i> Lịch sử tối ưu</h3>
+        <div id="history-list">
+          <p class="empty-history">Chưa có hoạt động nào.</p>
+        </div>
+        <button id="clear-history" class="btn-secondary">Xóa lịch sử</button>
+      </div>
+
+      <!-- Tab: Cài đặt -->
+      <div id="tab-settings" class="tab-content">
+        <h3><i class="fas fa-sliders-h"></i> Cài đặt</h3>
+        <div class="setting-item">
+          <span><i class="fas fa-moon"></i> Chế độ tối</span>
+          <label class="switch">
+            <input type="checkbox" id="dark-mode" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <span><i class="fas fa-volume-up"></i> Âm thanh</span>
+          <label class="switch">
+            <input type="checkbox" id="sound-toggle" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <span><i class="fas fa-bell"></i> Thông báo</span>
+          <label class="switch">
+            <input type="checkbox" id="notification-toggle" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <span><i class="fas fa-clock"></i> Tự động tối ưu (mỗi 30 phút)</span>
+          <label class="switch">
+            <input type="checkbox" id="auto-optimize" />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <span><i class="fas fa-ad"></i> Xem quảng cáo để nhận key</span>
+          <button id="watch-ad-btn" class="btn-primary btn-sm">Xem quảng cáo</button>
+        </div>
+      </div>
+
+      <!-- Tab: Về -->
+      <div id="tab-about" class="tab-content">
+        <h3><i class="fas fa-info-circle"></i> Về ứng dụng</h3>
+        <p><strong>⚡ Fix Lag Pro</strong> - Game Booster siêu tốc</p>
+        <p>Phiên bản 3.0</p>
+        <p>Key: <span class="highlight">THAILE-DVJSH</span></p>
+        <p>© 2026 - Phát triển bởi <span class="highlight">THAILE</span></p>
+        <p><i class="fas fa-check-circle" style="color:#8cf0b0;"></i> Đã được kích hoạt</p>
+        <button id="reset-app" class="btn-secondary">Đặt lại ứng dụng</button>
+      </div>
+
+    </div><!-- end main-content -->
+
+    <!-- Toast thông báo -->
+    <div id="toast" class="toast"></div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+          </html>
